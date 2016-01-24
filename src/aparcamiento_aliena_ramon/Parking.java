@@ -6,6 +6,7 @@
 
 package aparcamiento_aliena_ramon;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -45,19 +46,22 @@ public class Parking {
     }
     
     public String alquilar(Vehiculo v){
+        boolean fin = false;
         String nPlaza = null;
         Iterator<Integer> it = listadoPlazas.keySet().iterator();
-        while(it.hasNext()){
+        while(it.hasNext() || fin == false){
             Integer clave = it.next();
             Plaza plaza = listadoPlazas.get(clave);
             if(plaza.getVehiculo() == null){
-                if(v instanceof Coche && plaza.getTipo() == 'C'){
+                if(v instanceof Coche && plaza.getTipoVehiculo() == 'C'){
                     listadoPlazas.put(clave, plaza);
-                    nPlaza = Integer.toString(clave%100);
+                    nPlaza = Integer.toString(plaza.getNumPlaza());
+                    fin = true;
                 }
-                if(v instanceof Moto && plaza.getTipo() == 'M'){
+                if(v instanceof Moto && plaza.getTipoVehiculo() == 'M'){
                     listadoPlazas.put(clave, plaza);
-                    nPlaza = Integer.toString(clave%100);
+                    nPlaza = Integer.toString(plaza.getNumPlaza());
+                    fin = true;
                 }
             }
         }
@@ -83,38 +87,56 @@ public class Parking {
     }
     
     public List<Plaza> listarPlazas(String estado, char tipoVehiculo){
-        List<Plaza> lista = null;
-        List<Plaza> libres = null;
-        List<Plaza> ocupadas = null;
-        List<Plaza> coches = null;
-        List<Plaza> motos = null;
+        List<Plaza> lista = new ArrayList<>();
+        List<Plaza> libres = new ArrayList<>();
+        List<Plaza> ocupadas = new ArrayList<>();
+        List<Plaza> coches = new ArrayList<>();
+        List<Plaza> motos = new ArrayList<>();
         Iterator<Integer>it = listadoPlazas.keySet().iterator();
         while(it.hasNext()){
             Integer clave = it.next();
             Plaza plaza = listadoPlazas.get(clave);
-            if(plaza.getVehiculo() == null){
-                libres.add(plaza);
+            if(plaza.getVehiculo() != null){
+                boolean b = ocupadas.add(plaza);
             }else{
-                ocupadas.add(plaza);
+                boolean b = libres.add(plaza);
             }
-            if(plaza.getTipo() == 'C'){
-                coches.add(plaza);
-            }else if(plaza.getTipo() == 'M'){
-                motos.add(plaza);
+            if(plaza.getTipoVehiculo() == 'C'){
+                boolean b = coches.add(plaza);
+            }
+            if(plaza.getTipoVehiculo() == 'M'){
+                boolean b = motos.add(plaza);
             }
         }
-        if(estado.equals("libres") && tipoVehiculo == 'C' && coches.retainAll(libres)){
+        if(estado.equals("libres") && tipoVehiculo == 'C'){
+            boolean b = coches.retainAll(libres);
             lista = coches;
         }
-        if(estado.equals("ocupadas") && tipoVehiculo == 'C' && coches.retainAll(ocupadas)){
+        if(estado.equals("ocupadas") && tipoVehiculo == 'C'){
+            boolean b = coches.retainAll(ocupadas);
             lista = coches;
         }
-        if(estado.equals("libres") && tipoVehiculo == 'M' && motos.retainAll(libres)){
+        if(estado.equals("libres") && tipoVehiculo == 'M'){
+            boolean b = motos.retainAll(libres);
             lista = motos;
         }
-        if(estado.equals("ocupadas") && tipoVehiculo == 'M' && motos.retainAll(ocupadas)){
+        if(estado.equals("ocupadas") && tipoVehiculo == 'M'){
+            boolean b = motos.retainAll(ocupadas);
             lista = motos;
         }
         return lista;
+    }
+    
+    public int ganancias(){
+        int resultado = 0;
+        Iterator<Integer> it = listadoPlazas.keySet().iterator();
+        while(it.hasNext()){
+            Integer clave = it.next();
+            Plaza plaza = listadoPlazas.get(clave);
+            if(plaza.getVehiculo() != null){
+                resultado += plaza.precio();
+            }
+         }
+        return resultado;
     }
 }

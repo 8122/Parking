@@ -10,7 +10,7 @@ public class Plaza {
     private Vehiculo vehiculo = null;
     private int numPlaza;
     private String sotano;
-    private char tipo;
+    private char tipoVehiculo;
 
     public Plaza(int numPlaza, String sotano) {
         this.numPlaza = numPlaza;
@@ -41,12 +41,12 @@ public class Plaza {
         this.numPlaza = numPlaza;
     }
 
-    public char getTipo() {
-        return tipo;
+    public char getTipoVehiculo() {
+        return tipoVehiculo;
     }
 
-    public void setTipo(char tipo) {
-        this.tipo = tipo;
+    public void setTipoVehiculo(char tipoVehiculo) {
+        this.tipoVehiculo = tipoVehiculo;
     }
     
     public int precio(){
